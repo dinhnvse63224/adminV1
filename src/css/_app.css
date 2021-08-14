@@ -17,3 +17,8 @@ body {
 .form-screen body {
   @apply p-0;
 }
+
+.error-msg{
+  color: red;
+  font-weight: bold;
+}

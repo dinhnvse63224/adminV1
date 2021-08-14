@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
-import axios from 'axios'
+import { ApiService } from '../services/api.service'
+import { handleResponse } from '../utils/handle-response'
 
 export default createStore({
   state: {
@@ -15,12 +16,8 @@ export default createStore({
     isAsideMobileExpanded: false,
     isAsideLgActive: false,
 
-    /* Sample data (commonly used) */
-    clients: [],
-
-    employes: [],
-
-    assignment: []
+    staffs: [],
+    jobs: []
   },
   mutations: {
     /* A fit-them-all commit */
@@ -30,8 +27,8 @@ export default createStore({
 
     /* User */
     user (state, payload) {
-      if (payload.name) {
-        state.userName = payload.name
+      if (payload.fullName) {
+        state.userName = payload.fullName
       }
       if (payload.email) {
         state.userEmail = payload.email
@@ -41,21 +38,19 @@ export default createStore({
       }
     },
 
-    add_employee (state, payload) {
-      state.employes.push(payload)
-    },
-    delete_employee (state, payload) {
-      state.employes.splice(state.employes.findIndex(e => e.userName === payload.userName), 1)
+    /* =============== JOB =============== */
+    job_delete (state, payload) {
+      const index = state.jobs.findIndex(t => t.id === payload.id)
+      if (index > -1) {
+        state.jobs.splice(index, 1)
+      }
     }
   },
   actions: {
     asideMobileToggle ({ commit, state }, payload = null) {
       const isShow = payload !== null ? payload : !state.isAsideMobileExpanded
-
       document.getElementById('app').classList[isShow ? 'add' : 'remove']('ml-60')
-
       document.documentElement.classList[isShow ? 'add' : 'remove']('m-clipped')
-
       commit('basic', {
         key: 'isAsideMobileExpanded',
         value: isShow
@@ -69,44 +64,49 @@ export default createStore({
 
       document.documentElement.classList[value ? 'add' : 'remove']('form-screen')
     },
-    fetchClients ({ commit }) {
-      axios
-        .get('data-sources/clients.json')
-        .then(r => {
-          if (r.data) {
-            if (r.data.data) {
-              commit('basic', {
-                key: 'clients',
-                value: r.data.data
-              })
-            }
-          }
-        })
-        .catch(error => {
-          alert(error.message)
+
+    fetchJobs ({ commit }) {
+      ApiService.get('job/pending-jobs')
+        .then(handleResponse)
+        .then(jobs => {
+          commit('basic', {
+            key: 'jobs',
+            value: jobs.data || []
+          })
         })
     },
-    fetchEmployes ({ commit }) {
-      commit('basic', {
-        key: 'employes',
-        value: []
-      })
+
+    approveJob ({ commit }, payload) {
+      ApiService.put('job/approve', payload)
+        .then(() => {
+          alert('Duyệt thành công')
+          commit('job_delete', payload)
+        })
+        .catch(() => {
+          alert('Duyệt không thành công')
+        })
     },
-    addEmployee  ({ commit }, payload) {
-      commit('add_employee', payload)
+
+    denyJob ({ commit }, payload) {
+      ApiService.put('job/deny', payload)
+        .then(() => {
+          alert('Từ chối thành công')
+          commit('job_delete', payload)
+        })
+        .catch(() => {
+          alert('Từ chối không thành công')
+        })
     },
-    deleteEmployee ({ commit }, payload) {
-      commit('delete_employee', payload)
-    },
-    fetchAssignments ({ commit }) {
-      commit('basic', {
-        key: 'assignments',
-        value: [{
-          job_name: 'JobName1',
-          employee_name: 'Nguyễn Hải Phong',
-          company: 'Google'
-        }]
-      })
+
+    fetchStaff ({ commit }) {
+      ApiService.get('admin')
+        .then(handleResponse)
+        .then(staffs => {
+          commit('basic', {
+            key: 'staffs',
+            value: staffs.data || []
+          })
+        }).catch(handleResponse)
     }
   },
   modules: {

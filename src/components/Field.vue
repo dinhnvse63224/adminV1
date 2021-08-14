@@ -15,7 +15,8 @@ export default {
   name: 'Field',
   props: {
     label: String,
-    help: String
+    help: String,
+    error: String
   },
   setup (props, { slots }) {
     const wrapperClass = computed(() => {

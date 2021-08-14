@@ -1,46 +1,42 @@
 <template>
   <main-section>
     <card-component  class="w-11/12 md:w-5/12 shadow-2xl rounded-lg" @submit.prevent="submit" form>
-
       <field label="Login" help="Please enter your login">
-        <control v-model="form.login" :icon="mdiAccount" name="login" autocomplete="username"/>
+        <control :ref="'userName'" v-model="form.userName" :icon="mdiAccount" name="userName" autocomplete="username"/>
       </field>
-
       <field label="Password" help="Please enter your password">
-        <control v-model="form.pass" :icon="mdiAsterisk" type="password" name="password" autocomplete="current-password"/>
+        <control v-model="form.password" :icon="mdiAsterisk" type="password" name="password" autocomplete="current-password"/>
       </field>
-
-      <check-radio-picker name="remember" v-model="form.remember" :options="{ remember: 'Remember' }" />
-
+      <span class="error-msg" v-if="errorMessage">{{ errorMessage }}</span>
       <divider />
-
       <jb-buttons>
         <jb-button type="submit" color="info" label="Login" />
-        <jb-button to="/" color="info" outline label="Back" />
       </jb-buttons>
     </card-component>
   </main-section>
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import MainSection from '@/components/MainSection'
 import CardComponent from '@/components/CardComponent'
-import CheckRadioPicker from '@/components/CheckRadioPicker'
+// import CheckRadioPicker from '@/components/CheckRadioPicker'
 import Field from '@/components/Field'
 import Control from '@/components/Control'
 import Divider from '@/components/Divider.vue'
 import JbButton from '@/components/JbButton'
 import JbButtons from '@/components/JbButtons'
+import { authenticationService } from '../services/authentication.service'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Login',
   components: {
     MainSection,
     CardComponent,
-    CheckRadioPicker,
+    // CheckRadioPicker,
     Field,
     Control,
     Divider,
@@ -48,23 +44,43 @@ export default {
     JbButtons
   },
   setup () {
+    const store = useStore()
+
     const form = reactive({
-      login: 'john.doe',
-      pass: 'very-secret-password-fYjUw-',
+      userName: '',
+      password: '',
       remember: ['remember']
     })
+
+    const errorMessage = ref('')
 
     const router = useRouter()
 
     const submit = () => {
-      router.push('/')
+      try {
+        if (!form.userName || !form.password) {
+          console.log('aaa')
+        } else {
+          authenticationService.login(form.userName, form.password).then(user => {
+            console.log(user)
+            router.push('/')
+            store.commit('user', user)
+          }).catch(error => {
+            errorMessage.value = error.response.data.error_description
+            console.log('err', errorMessage.value)
+          })
+        }
+      } catch (error) {
+        console.error(error.response)
+      }
     }
 
     return {
       form,
       submit,
       mdiAccount,
-      mdiAsterisk
+      mdiAsterisk,
+      errorMessage
     }
   }
 }

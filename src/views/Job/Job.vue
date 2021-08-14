@@ -2,28 +2,28 @@
   <hero-bar>Duyệt công việc</hero-bar>
   <main-section>
      <card-component title="" has-table>
-      <assignment-table />
+      <job-table />
     </card-component>
   </main-section>
 </template>
 <script>
-import AssignmentTable from './AssignmentTable'
+import JobTable from './JobTable'
 import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail, mdiCheck, mdiMonitorCellphone } from '@mdi/js'
 import MainSection from '@/components/MainSection'
 import CardComponent from '@/components/CardComponent'
 import HeroBar from '@/components/HeroBar'
 
 export default {
-  name: 'Assignment',
+  name: 'Job',
   components: {
     MainSection,
     HeroBar,
-    AssignmentTable,
+    JobTable,
     CardComponent
   },
   setup () {
     return {
-      AssignmentTable,
+      JobTable,
       mdiBallot,
       mdiBallotOutline,
       mdiAccount,

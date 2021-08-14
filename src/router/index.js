@@ -1,62 +1,19 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home/Home'
+import { authenticationService } from '../services/authentication.service'
+import { Role } from '../utils/enum'
+import Dashboard from '../views/Dashboard/Dashboard'
 
 const routes = [
   {
     // Document title tag
     // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
+      authorize: [Role.Admin, Role.Staff]
     },
     path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    meta: {
-      title: 'Nhà tuyển dụng'
-    },
-    path: '/tables',
-    name: 'tables',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "tables" */ '../views/Tables')
-  },
-  {
-    meta: {
-      title: 'Sinh viên'
-    },
-    path: '/tables',
-    name: 'tables',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "tables" */ '../views/Tables')
-  },
-  {
-    meta: {
-      title: 'Forms'
-    },
-    path: '/forms',
-    name: 'forms',
-    component: () => import(/* webpackChunkName: "forms" */ '../views/Forms')
-  },
-  {
-    meta: {
-      title: 'Profile'
-    },
-    path: '/profile',
-    name: 'profile',
-    component: () => import(/* webpackChunkName: "profile" */ '../views/Profile')
-  },
-  {
-    meta: {
-      title: 'Ui'
-    },
-    path: '/ui',
-    name: 'ui',
-    component: () => import(/* webpackChunkName: "profile" */ '../views/Ui')
+    name: 'Dashboard',
+    component: Dashboard
   },
   {
     meta: {
@@ -69,23 +26,26 @@ const routes = [
   },
   {
     meta: {
-      title: 'Quản lý nhân viên'
+      title: 'Quản lý nhân viên',
+      authorize: [Role.Admin, Role.Staff]
     },
-    path: '/employees',
-    name: 'employees',
-    component: () => import(/* webpackChunkName: "employees" */ '../views/Employees/Employee')
+    path: '/staff',
+    name: 'staff',
+    component: () => import(/* webpackChunkName: "employees" */ '../views/Staff/Staff')
   },
   {
     meta: {
-      title: 'Duyệt công việc'
+      title: 'Duyệt công việc',
+      authorize: [Role.Admin, Role.Staff]
     },
-    path: '/assignment',
-    name: 'assignment',
-    component: () => import(/* webpackChunkName: "assignment" */ '../views/Assignments/Assignment')
+    path: '/job',
+    name: 'job',
+    component: () => import(/* webpackChunkName: "assignment" */ '../views/Job/Job')
   },
   {
     meta: {
-      title: 'Banner'
+      title: 'Banner',
+      authorize: [Role.Admin, Role.Staff]
     },
     path: '/banner',
     name: 'banner',
@@ -99,6 +59,26 @@ const router = createRouter({
   scrollBehavior (to, from, savedPosition) {
     return savedPosition || { top: 0 }
   }
+})
+
+router.beforeEach((to, from, next) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const { authorize } = to.meta
+  const currentUser = authenticationService.currentUserValue
+
+  if (authorize) {
+    if (!currentUser) {
+      // not logged in so redirect to login page with the return url
+      return next({ path: '/login' })
+    }
+
+    // check if route is restricted by role
+    if (authorize.length && !authorize.includes(currentUser.role)) {
+      // role not authorised so redirect to home page
+      return next({ path: '/' })
+    }
+  }
+  next()
 })
 
 export default router

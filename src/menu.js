@@ -1,83 +1,31 @@
 import {
-  mdiAccountCircle,
   mdiDesktopMac,
-  mdiGithub,
-  mdiLock,
-  mdiMonitorClean,
-  mdiSquareEditOutline,
-  mdiTable,
-  mdiViewList,
-  mdiTelevisionGuide
+  mdiAccount,
+  mdiAlphaJBox,
+  mdiImageAlbum
 } from '@mdi/js'
 
 export default [
-  'General',
   [
     {
       to: '/',
       icon: mdiDesktopMac,
       label: 'Dashboard'
-    }
-  ],
-  'Examples',
-  [
-    {
-      to: '/tables',
-      label: 'Tables',
-      icon: mdiTable,
-      updateMark: true
     },
     {
-      to: '/tables',
-      label: 'Tables',
-      icon: mdiTable,
-      updateMark: true
-    },
-    {
-      to: '/employees',
+      to: '/staff',
       label: 'Quản lý nhân viên',
-      icon: mdiSquareEditOutline
+      icon: mdiAccount
     },
     {
-      to: '/assignment',
+      to: '/job',
       label: 'Duyệt công việc',
-      icon: mdiTelevisionGuide
+      icon: mdiAlphaJBox
     },
     {
       to: '/banner',
       label: 'Banner',
-      icon: mdiAccountCircle
-    },
-    {
-      to: '/login',
-      label: 'Login',
-      icon: mdiLock
-    },
-    {
-      label: 'Submenus',
-      subLabel: 'Submenus Example',
-      icon: mdiViewList,
-      menu: [
-        {
-          label: 'Sub-item One'
-        },
-        {
-          label: 'Sub-item Two'
-        }
-      ]
-    }
-  ],
-  'About',
-  [
-    {
-      href: 'https://tailwind-vue.justboil.me/',
-      label: 'Premium version',
-      icon: mdiMonitorClean
-    },
-    {
-      href: 'https://github.com/justboil/admin-one-vue-tailwind',
-      label: 'GitHub',
-      icon: mdiGithub
+      icon: mdiImageAlbum
     }
   ]
 ]

@@ -1,7 +1,7 @@
 <template>
   <hero-bar>Nhân viên</hero-bar>
   <main-section>
-    <card-component title="Forms" :icon="mdiSearch" @submit.prevent="submit" form>
+    <card-component title="Thông tin nhân viên" :icon="mdiSearch" @submit.prevent="submit" form>
       <field>
         <control placeholder="Tài khoản" place :icon="mdiAccount" v-model="form.username" />
         <control placeholder="Mật khẩu" type="password" :icon="mdiMail" v-model="form.password" />
@@ -14,14 +14,14 @@
         <jb-button type="submit" color="info" label="Submit" />
       </jb-buttons>
     </card-component>
-     <card-component :icon="mdiMonitorCellphone" title="Danh sách nhân viên" has-table>
-      <employee-table />
+     <card-component :icon="mdiAccount" title="Danh sách nhân viên" has-table>
+      <staff-table />
     </card-component>
   </main-section>
 </template>
 
 <script>
-import EmployeeTable from './EmployeeTable'
+import StaffTable from './StaffTable'
 import { reactive } from 'vue'
 import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail, mdiCheck, mdiMonitorCellphone } from '@mdi/js'
 import MainSection from '@/components/MainSection'
@@ -38,7 +38,7 @@ export default {
   components: {
     MainSection,
     HeroBar,
-    EmployeeTable,
+    StaffTable,
     CardComponent,
     Field,
     Control,
@@ -66,7 +66,7 @@ export default {
     return {
       form,
       submit,
-      EmployeeTable,
+      StaffTable,
       mdiBallot,
       mdiBallotOutline,
       mdiAccount,

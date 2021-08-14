@@ -5,12 +5,13 @@ import router from './router'
 import store from './store'
 
 import './css/main.css'
+import { config } from './utils/config'
 
 /* Fetch sample data */
-store.dispatch('fetchClients')
+// store.dispatch('fetchClients')
 
 /* Default title tag */
-const defaultDocumentTitle = 'Admin One Vue 3 Tailwind'
+const defaultDocumentTitle = config.defaultTitle
 
 /* Collapse mobile aside menu on route change & set document title from route meta */
 router.beforeEach(to => {

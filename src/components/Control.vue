@@ -27,6 +27,7 @@
       :placeholder="placeholder"
       :type="computedType"
       :class="inputElClass"
+      :ref="ref"
     >
     <control-icon
       v-if="icon"
@@ -52,6 +53,7 @@ export default {
     autocomplete: String,
     placeholder: String,
     icon: String,
+    ref: String,
     options: Array,
     type: {
       type: String,
@@ -87,6 +89,8 @@ export default {
     const computedType = computed(() => props.options ? 'select' : props.type)
 
     const controlIconH = computed(() => props.type === 'textarea' ? 'h-full' : 'h-12')
+
+    computed(() => props.ref !== '' ? this.$refs[props.ref].$el.focus() : '')
 
     return {
       computedValue,

@@ -11,11 +11,6 @@
       <nav-bar-item type="hidden lg:flex xl:hidden" @click.prevent="menuOpenLg">
         <icon :path="mdiMenu" size="24" />
       </nav-bar-item>
-      <nav-bar-item>
-        <div class="control">
-          <input type="text" class="px-3 focus:ring rounded border-0" placeholder="Search everywhere..." />
-        </div>
-      </nav-bar-item>
     </div>
     <div class="flex-none items-stretch flex h-14 lg:hidden">
       <nav-bar-item class="items-center flex" @click.prevent="menuNavBarToggle">
@@ -30,49 +25,16 @@
       <div
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
-        <nav-bar-menu has-divider>
-          <nav-bar-item-label :icon="mdiMenu" label="Sample menu"/>
-
-          <template #dropdown>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiClockOutline" label="Item One"/>
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiCloud" label="Item Two"/>
-            </nav-bar-item>
-            <nav-bar-menu-divider/>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiCrop" label="Item Last"/>
-            </nav-bar-item>
-          </template>
-        </nav-bar-menu>
-        <nav-bar-menu has-divider>
+        <nav-bar-item>
           <user-avatar class="w-6 h-6 mr-3 inline-flex" />
           <div>
             <span>{{ userName }}</span>
           </div>
-
-          <template #dropdown>
-            <nav-bar-item to="/profile">
-              <nav-bar-item-label :icon="mdiAccount" label="My Profile"/>
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiCogOutline" label="Settings"/>
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiEmail" label="Messages"/>
-            </nav-bar-item>
-            <nav-bar-menu-divider/>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiLogout" label="Log Out"/>
-            </nav-bar-item>
-          </template>
-        </nav-bar-menu>
-        <nav-bar-item href="https://github.com/justboil/admin-one-vue-tailwind" has-divider is-desktop-icon-only>
-          <nav-bar-item-label :icon="mdiGithub" label="GitHub" is-desktop-icon-only />
         </nav-bar-item>
         <nav-bar-item is-desktop-icon-only>
-          <nav-bar-item-label :icon="mdiLogout" label="Log out" is-desktop-icon-only />
+          <nav-bar-item @click.prevent="logOut" label="Log out" is-desktop-icon-only>
+             <icon :path="mdiLogout" />
+          </nav-bar-item>
         </nav-bar-item>
       </div>
     </div>
@@ -98,24 +60,22 @@ import {
   mdiGithub
 } from '@mdi/js'
 import NavBarItem from '@/components/NavBarItem'
-import NavBarItemLabel from '@/components/NavBarItemLabel'
-import NavBarMenu from '@/components/NavBarMenu'
-import NavBarMenuDivider from '@/components/NavBarMenuDivider'
 import UserAvatar from '@/components/UserAvatar'
 import Icon from '@/components/Icon'
+import { authenticationService } from '../services/authentication.service'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'NavBar',
   components: {
     UserAvatar,
-    NavBarMenu,
     NavBarItem,
-    NavBarItemLabel,
-    NavBarMenuDivider,
     Icon
   },
   setup () {
     const store = useStore()
+
+    const router = useRouter()
 
     const isNavBarVisible = computed(() => !store.state.isFormScreen)
 
@@ -139,6 +99,11 @@ export default {
       store.dispatch('asideLgToggle', true)
     }
 
+    const logOut = () => {
+      router.push('/login')
+      authenticationService.logout()
+    }
+
     return {
       isNavBarVisible,
       isAsideMobileExpanded,
@@ -149,6 +114,7 @@ export default {
       menuNavBarToggleIcon,
       menuNavBarToggle,
       menuOpenLg,
+      logOut,
       mdiMenu,
       mdiClockOutline,
       mdiCloud,
