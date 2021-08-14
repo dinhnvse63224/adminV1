@@ -169,7 +169,7 @@ export default createStore({
             commit('banned_staff', payload)
           }).catch(handleResponse)
       } else {
-        ApiService.put('admin/unband/staff/' + payload.id)
+        ApiService.put('admin/unban/staff/' + payload.id)
           .then(handleResponse)
           .then(staffs => {
             alert('Mở khóa tài khoản thành công')
