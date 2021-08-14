@@ -1,4 +1,4 @@
 [
-  { "label": 1, "value": "Full time" },
-  { "label": 2, "value": "Part time" }
+  { "value": 1, "label": "Full time" },
+  { "value": 2, "label": "Part time" }
 ]

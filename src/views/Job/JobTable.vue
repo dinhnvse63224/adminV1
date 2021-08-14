@@ -6,7 +6,12 @@
       <th>Tên nhà tuyển dụng</th>
       <th>Tên công ty</th>
       <th>Ngày tạo</th>
-      <td></td>
+      <th></th>
+    </tr>
+    <tr>
+      <th colspan="50">
+        <input v-model="searchText" @keyup="itemFilter" class="search-input" type="text">
+      </th>
     </tr>
     </thead>
     <tbody>
@@ -28,19 +33,23 @@
   </table>
   <div class="table-pagination">
     <level>
-      <small>Số bản ghi: {{ items.length || 0 }}</small>
+      <b>Số bản ghi: {{ items.length || 0 }}</b>
     </level>
   </div>
 
   <modal-box
     v-model="jobModalActive"
     title="Thông tin công việc"
-    button-label="Đóng"
-    button="danger"
+    noButton
   >
-    <p>Tên công việc: {{ Job.job_name }}</p>
-    <p>Nhà tuyển dụng: {{ Job.employee_name }}</p>
-    <p>Tên công ty: {{ Job.company }}</p>
+    <p><b>Tên công việc:</b> {{ Job.name }}</p>
+    <p><b>Hình thức:</b> {{ Job.workingFormLabel }} <b>Khu vực:</b> {{ Job.locationLabel }}</p>
+    <p><b>Địa chỉ:</b> {{ Job.workingPlace }}</p>
+    <p><b>Mô tả công việc:</b> <span v-html="Job.description"></span></p>
+    <p v-if="Job.requirement"><b>Yêu cầu công việc:</b> <span v-html="Job.requirement"></span></p>
+    <p><b>Mức lương:</b> {{ Job.salaryMin }} - {{ Job.salaryMax }}</p>
+    <p><b>Quyền lợi:</b> <span v-html="Job.offer"></span></p>
+    <p><b>Số lượng tuyển:</b> {{ Job.quantity }}</p>
   </modal-box>
 
   <modal-box
@@ -93,16 +102,25 @@ export default {
 
     const items = computed(() => store.state.jobs)
 
+    const locations = computed(() => store.state.locations)
+
+    const workingforms = computed(() => store.state.workingforms)
+
     const jobModalActive = ref(false)
 
     const approveModal = ref(false)
     const denyModal = ref(false)
+    const searchText = ref('')
 
     const Job = ref({})
 
     const showModalInfo = (job) => {
       jobModalActive.value = true
       Job.value = job
+      Job.value.salaryMin = new Intl.NumberFormat().format(Job.value.salaryMin)
+      Job.value.salaryMax = new Intl.NumberFormat().format(Job.value.salaryMax)
+      Job.value.locationLabel = locations.value.find(l => l.value === Job.value.location)?.label
+      Job.value.workingFormLabel = workingforms.value.find(l => l.value === Job.value.workingForm)?.label
     }
 
     const approveModalShow = (job) => {
@@ -125,7 +143,20 @@ export default {
     const denyJobAction = () => {
       if (Job.value) {
         const id = Job.value.id
-        store.dispatch('denyJobAction', { id })
+        store.dispatch('denyJob', { id })
+      }
+    }
+
+    const itemFilter = () => {
+      const cloneData = [...items.value]
+      if (searchText.value) {
+        const Items = cloneData.filter(t => t.name.toLowerCase().indexOf(searchText.value.toLowerCase()) > -1 || t.id.toString() === searchText.value) || []
+        store.commit('basic', {
+          key: 'jobs',
+          value: Items
+        })
+      } else {
+        store.dispatch('fetchJobs')
       }
     }
 
@@ -142,7 +173,9 @@ export default {
       Job,
       items,
       approveModal,
-      denyModal
+      denyModal,
+      itemFilter,
+      searchText
     }
   }
 }

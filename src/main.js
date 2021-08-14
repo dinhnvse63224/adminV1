@@ -9,6 +9,8 @@ import { config } from './utils/config'
 
 /* Fetch sample data */
 // store.dispatch('fetchClients')
+store.dispatch('fetchLocation')
+store.dispatch('fetchWorkingForm')
 
 /* Default title tag */
 const defaultDocumentTitle = config.defaultTitle

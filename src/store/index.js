@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { createStore } from 'vuex'
 import { ApiService } from '../services/api.service'
 import { handleResponse } from '../utils/handle-response'
@@ -15,6 +16,11 @@ export default createStore({
     /* Aside */
     isAsideMobileExpanded: false,
     isAsideLgActive: false,
+
+    menus: [],
+
+    workingforms: [],
+    locations: [],
 
     staffs: [],
     jobs: []
@@ -38,11 +44,27 @@ export default createStore({
       }
     },
 
+    menuRole (state, payload) {
+      state.menus = payload
+    },
+
     /* =============== JOB =============== */
     job_delete (state, payload) {
       const index = state.jobs.findIndex(t => t.id === payload.id)
       if (index > -1) {
         state.jobs.splice(index, 1)
+      }
+    },
+
+    /* =============== Staff =============== */
+    staff_insert (state, payload) {
+      state.staffs.push(payload)
+    },
+
+    banned_staff (state, payload) {
+      const index = state.staffs.findIndex(t => t.id === payload.id)
+      if (index > -1) {
+        state.staffs[index].isBanned = payload.isBanned
       }
     }
   },
@@ -63,6 +85,26 @@ export default createStore({
       commit('basic', { key: 'isFormScreen', value })
 
       document.documentElement.classList[value ? 'add' : 'remove']('form-screen')
+    },
+
+    fetchLocation ({ commit }) {
+      axios.get('data-sources/location.json')
+        .then(locations => {
+          commit('basic', {
+            key: 'locations',
+            value: locations.data
+          })
+        })
+    },
+
+    fetchWorkingForm ({ commit }) {
+      axios.get('data-sources/working-form.json')
+        .then(workingforms => {
+          commit('basic', {
+            key: 'workingforms',
+            value: workingforms.data
+          })
+        })
     },
 
     fetchJobs ({ commit }) {
@@ -106,6 +148,22 @@ export default createStore({
             key: 'staffs',
             value: staffs.data || []
           })
+        }).catch(handleResponse)
+    },
+
+    StaffInsert ({ commit }, payload) {
+      ApiService.post('admin/create', payload)
+        .then(() => {
+          commit('staff_insert', payload)
+        }).catch(handleResponse)
+    },
+
+    BannedStaff ({ commit }, payload) {
+      ApiService.remove('admin/ban/staff/' + payload.id)
+        .then(handleResponse)
+        .then(staffs => {
+          alert('Khóa tài khoản thành công')
+          commit('banned_staff', payload)
         }).catch(handleResponse)
     }
   },

@@ -7,7 +7,7 @@
         <control placeholder="Mật khẩu" type="password" :icon="mdiMail" v-model="form.password" />
       </field>
      <field>
-        <control placeholder="Họ và tên" place :icon="mdiAccount" v-model="form.full_name" />
+        <control placeholder="Họ và tên" place :icon="mdiAccount" v-model="form.fullName" />
         <control placeholder="Số điện thoại" :icon="mdiMonitorCellphone" v-model="form.mobile_phone" />
       </field>
       <jb-buttons>
@@ -50,17 +50,17 @@ export default {
     const form = reactive({
       username: '',
       password: '',
-      full_name: '',
-      mobile_phone: ''
+      confirmPassword: '',
+      fullName: ''
     })
 
     const submit = () => {
-      console.log('Forms data', JSON.stringify(form))
-      store.dispatch('addEmployee', { ...form })
+      form.confirmPassword = form.password
+      store.dispatch('StaffInsert', { ...form })
       form.username = ''
       form.password = ''
-      form.full_name = ''
-      form.mobile_phone = ''
+      form.confirmPassword = ''
+      form.fullName = ''
     }
 
     return {

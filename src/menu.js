@@ -4,28 +4,31 @@ import {
   mdiAlphaJBox,
   mdiImageAlbum
 } from '@mdi/js'
+import { Role } from './utils/enum'
 
-export default [
-  [
-    {
-      to: '/',
-      icon: mdiDesktopMac,
-      label: 'Dashboard'
-    },
-    {
-      to: '/staff',
-      label: 'Quản lý nhân viên',
-      icon: mdiAccount
-    },
-    {
-      to: '/job',
-      label: 'Duyệt công việc',
-      icon: mdiAlphaJBox
-    },
-    {
-      to: '/banner',
-      label: 'Banner',
-      icon: mdiImageAlbum
-    }
-  ]
+export const Menu = [
+  {
+    to: '/',
+    icon: mdiDesktopMac,
+    label: 'Dashboard',
+    authorize: [Role.Admin]
+  },
+  {
+    to: '/staff',
+    label: 'Quản lý nhân viên',
+    icon: mdiAccount,
+    authorize: [Role.Admin]
+  },
+  {
+    to: '/job',
+    label: 'Duyệt công việc',
+    icon: mdiAlphaJBox,
+    authorize: [Role.Staff]
+  },
+  {
+    to: '/banner',
+    label: 'Banner',
+    icon: mdiImageAlbum,
+    authorize: [Role.Staff]
+  }
 ]

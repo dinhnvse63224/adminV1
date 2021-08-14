@@ -28,11 +28,13 @@
         <card-component :icon="mdiChartBar"
         title="Báo cáo của tháng 08/2021"
         has-table>
+        <month-report-table />
       </card-component>
       <card-component
       :icon="mdiChartBar"
         title="Báo cáo của quý 03/2021"
         has-table>
+      <quarter-report-table />
       </card-component>
     </div>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-6">
@@ -40,6 +42,7 @@
         :icon="mdiChartBar"
         title="Báo cáo của năm 2021"
         has-table>
+        <year-report-table />
       </card-component>
     </div>
   </main-section>
@@ -59,6 +62,9 @@ import HeroBar from '@/components/HeroBar'
 import CardWidget from '@/components/CardWidget'
 import CardComponent from '@/components/CardComponent'
 import { ref } from '@vue/reactivity'
+import MonthReportTable from './Reports/MonthReportTable'
+import YearReportTable from './Reports/YearReportTable.vue'
+import QuarterReportTable from './Reports/QuarterReportTable.vue'
 
 export default {
   name: 'Dashboard',
@@ -66,7 +72,10 @@ export default {
     MainSection,
     CardComponent,
     CardWidget,
-    HeroBar
+    HeroBar,
+    MonthReportTable,
+    YearReportTable,
+    QuarterReportTable
   },
   setup () {
     const dataCounter = ref({ employers: 10, students: 111, jobs: 11 })
@@ -76,7 +85,8 @@ export default {
       mdiAccount,
       mdiChartTimelineVariant,
       mdiChartBar,
-      dataCounter
+      dataCounter,
+      MonthReportTable
     }
   }
 }

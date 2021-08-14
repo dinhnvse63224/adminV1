@@ -30,13 +30,14 @@ import JbButton from '@/components/JbButton'
 import JbButtons from '@/components/JbButtons'
 import { authenticationService } from '../services/authentication.service'
 import { useStore } from 'vuex'
+import { Role } from '../utils/enum'
+import { Menu } from '../menu'
 
 export default {
   name: 'Login',
   components: {
     MainSection,
     CardComponent,
-    // CheckRadioPicker,
     Field,
     Control,
     Divider,
@@ -62,9 +63,13 @@ export default {
           console.log('aaa')
         } else {
           authenticationService.login(form.userName, form.password).then(user => {
-            console.log(user)
-            router.push('/')
+            if (user.role === Role.Staff) {
+              router.push('/job')
+            } else {
+              router.push('/')
+            }
             store.commit('user', user)
+            store.commit('menuRole', [Menu.filter(m => m.authorize.includes(user.role))])
           }).catch(error => {
             errorMessage.value = error.response.data.error_description
             console.log('err', errorMessage.value)

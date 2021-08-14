@@ -15,7 +15,7 @@
 
       <divider />
 
-      <jb-buttons>
+      <jb-buttons v-if="!noButton">
         <jb-button :label="buttonLabel" :color="button" @click="confirm" />
         <jb-button v-if="hasCancel" label="Cancel" @click="cancel" :color="button" outline />
       </jb-buttons>
@@ -50,6 +50,7 @@ export default {
       default: 'Confirm'
     },
     hasCancel: Boolean,
+    noButton: Boolean,
     modelValue: [String, Number, Boolean]
   },
   emits: ['update:modelValue', 'cancel', 'confirm'],

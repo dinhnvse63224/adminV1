@@ -10,10 +10,7 @@ module.exports = {
   configureWebpack: config => {
     return {
       externals: {
-        moment: 'moment',
-        config: {
-          apiUrl: 'http://capstone2021-test.ap-southeast-1.elasticbeanstalk.com'
-        }
+        moment: 'moment'
       }
     }
   }
