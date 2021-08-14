@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { createStore } from 'vuex'
 import { ApiService } from '../services/api.service'
+import { authenticationService } from '../services/authentication.service'
 import { handleResponse } from '../utils/handle-response'
+import { Role } from '../utils/enum'
 
 export default createStore({
   state: {
@@ -159,16 +161,25 @@ export default createStore({
     },
 
     BannedStaff ({ commit }, payload) {
-      ApiService.remove('admin/ban/staff/' + payload.id)
-        .then(handleResponse)
-        .then(staffs => {
-          alert('Khóa tài khoản thành công')
-          commit('banned_staff', payload)
-        }).catch(handleResponse)
+      if (payload.isBanned) {
+        ApiService.remove('admin/ban/staff/' + payload.id)
+          .then(handleResponse)
+          .then(staffs => {
+            alert('Khóa tài khoản thành công')
+            commit('banned_staff', payload)
+          }).catch(handleResponse)
+      } else {
+        ApiService.put('admin/unband/staff/' + payload.id)
+          .then(handleResponse)
+          .then(staffs => {
+            alert('Mở khóa tài khoản thành công')
+            commit('banned_staff', payload)
+          }).catch(handleResponse)
+      }
     },
 
     changePassword ({ commit }, payload) {
-      ApiService.put('admin/update/password', payload)
+      ApiService.put((authenticationService.currentUserValue.role === Role.Admin ? 'admin' : 'staff') + '/update/password', payload)
         .then(handleResponse)
         .then(() => {
           alert('Đổi mật khẩu thành công')

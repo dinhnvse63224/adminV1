@@ -13,11 +13,6 @@
     <tr>
        <td>Số lượng sinh viên tham gia tìm việc: 0</td>
     </tr>
-    <tr>
-      <td>
-         <jb-button title="Tải báo cáo" label="Tải về" color="info" :icon="mdiDownload" />
-      </td>
-    </tr>
     </tbody>
   </table>
 </template>
@@ -31,7 +26,6 @@ import JbButton from '@/components/JbButton'
 export default {
   name: 'MonthReportTable',
   components: {
-    JbButton
   },
   props: {
     checkable: Boolean

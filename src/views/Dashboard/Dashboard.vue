@@ -24,6 +24,9 @@
         label="Công việc đã đăng"
       />
     </div>
+    <div>
+       <jb-button title="Tải báo cáo" label="Tải báo cáo" color="info" :icon="mdiDownload" />
+    </div>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-6">
         <card-component :icon="mdiChartBar"
         title="Báo cáo của tháng 08/2021"
@@ -54,7 +57,8 @@ import {
   mdiAccountMultiple,
   mdiAccount,
   mdiChartTimelineVariant,
-  mdiChartBar
+  mdiChartBar,
+  mdiDownload
 } from '@mdi/js'
 
 import MainSection from '@/components/MainSection'
@@ -65,6 +69,7 @@ import { ref } from '@vue/reactivity'
 import MonthReportTable from './Reports/MonthReportTable'
 import YearReportTable from './Reports/YearReportTable.vue'
 import QuarterReportTable from './Reports/QuarterReportTable.vue'
+import JbButton from '@/components/JbButton'
 
 export default {
   name: 'Dashboard',
@@ -75,7 +80,8 @@ export default {
     HeroBar,
     MonthReportTable,
     YearReportTable,
-    QuarterReportTable
+    QuarterReportTable,
+    JbButton
   },
   setup () {
     const dataCounter = ref({ employers: 10, students: 111, jobs: 11 })
@@ -86,7 +92,8 @@ export default {
       mdiChartTimelineVariant,
       mdiChartBar,
       dataCounter,
-      MonthReportTable
+      MonthReportTable,
+      mdiDownload
     }
   }
 }

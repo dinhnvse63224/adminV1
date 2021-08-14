@@ -10,11 +10,6 @@
     <tr>
      <td>Số lượng sinh viên nhà tuyển dụng có nhu cầu tuyển dụng: 0</td>
     </tr>
-     <tr>
-      <td>
-         <jb-button title="Tải báo cáo" label="Tải về" color="info" :icon="mdiDownload" />
-      </td>
-    </tr>
     </tbody>
   </table>
 </template>
@@ -28,7 +23,6 @@ import JbButton from '@/components/JbButton'
 export default {
   name: 'QuarterReportTable',
   components: {
-    JbButton
   },
   props: {
     checkable: Boolean

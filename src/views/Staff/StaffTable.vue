@@ -2,16 +2,16 @@
   <table>
     <thead>
     <tr>
+      <th>Tài khoản</th>
       <th>Họ tên</th>
-      <th>Số điện thoại</th>
       <th>Ngày tạo</th>
       <td></td>
     </tr>
     </thead>
     <tbody>
     <tr v-for="staff in items" :key="staff.id">
-      <td data-label="Name">{{ staff.fullName }}</td>
-      <td data-label="Phone">{{ staff.mobilePhone }}</td>
+      <td data-label="Name">{{ staff.username }}</td>
+      <td data-label="Phone">{{ staff.fullName }}</td>
       <td data-label="Phone">{{ staff.createDate }}</td>
       <td class="actions-cell">
         <jb-buttons type="justify-start lg:justify-end" no-wrap>
