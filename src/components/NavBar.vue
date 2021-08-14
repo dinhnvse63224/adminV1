@@ -31,6 +31,9 @@
             <span>{{ userName }}</span>
           </div>
         </nav-bar-item>
+        <nav-bar-item>
+          <div @click.prevent="changePasswordModal">Đổi mật khẩu</div>
+        </nav-bar-item>
         <nav-bar-item is-desktop-icon-only>
           <nav-bar-item @click.prevent="logOut" label="Log out" is-desktop-icon-only>
              <icon :path="mdiLogout" />
@@ -39,10 +42,29 @@
       </div>
     </div>
   </nav>
+
+  <modal-box
+    v-model="showModalPassword"
+    title="Đổi mật khẩu"
+    button-label="Xác nhận"
+    button="info"
+    hasCancel
+    v-on:confirm="changePassword"
+  >
+    <field>
+        <control placeholder="Mật khẩu cũ" type="password" v-model="form.oldPassword" />
+      </field>
+    <field>
+        <control placeholder="Mật khẩu mới" type="password" v-model="form.password" />
+      </field>
+     <field>
+        <control placeholder="Nhập lại mật khẩu" type="password" v-model="form.confirmPassword" />
+      </field>
+  </modal-box>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import {
   mdiForwardburger,
@@ -64,18 +86,30 @@ import UserAvatar from '@/components/UserAvatar'
 import Icon from '@/components/Icon'
 import { authenticationService } from '../services/authentication.service'
 import { useRouter } from 'vue-router'
+import ModalBox from '@/components/ModalBox'
+import Field from '@/components/Field'
+import Control from '@/components/Control'
 
 export default {
   name: 'NavBar',
   components: {
     UserAvatar,
     NavBarItem,
-    Icon
+    Icon,
+    ModalBox,
+    Field,
+    Control
   },
   setup () {
     const store = useStore()
 
     const router = useRouter()
+
+    const form = reactive({
+      password: '',
+      oldPassword: '',
+      confirmPassword: ''
+    })
 
     const isNavBarVisible = computed(() => !store.state.isFormScreen)
 
@@ -88,6 +122,7 @@ export default {
     const menuToggleMobile = () => store.dispatch('asideMobileToggle')
 
     const isMenuNavBarActive = ref(false)
+    const showModalPassword = ref(false)
 
     const menuNavBarToggleIcon = computed(() => isMenuNavBarActive.value ? mdiClose : mdiDotsVertical)
 
@@ -102,6 +137,19 @@ export default {
     const logOut = () => {
       router.push('/login')
       authenticationService.logout()
+    }
+
+    const changePasswordModal = () => {
+      showModalPassword.value = true
+    }
+
+    const changePassword = () => {
+      if (form.password) {
+        store.dispatch('changePassword', { ...form })
+        form.password = ''
+        form.oldPassword = ''
+        form.confirmPassword = ''
+      }
     }
 
     return {
@@ -123,7 +171,11 @@ export default {
       mdiCogOutline,
       mdiEmail,
       mdiLogout,
-      mdiGithub
+      mdiGithub,
+      changePasswordModal,
+      changePassword,
+      showModalPassword,
+      form
     }
   }
 }

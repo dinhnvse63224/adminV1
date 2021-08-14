@@ -11,6 +11,16 @@ export function handleResponse (response) {
       authenticationService.logout()
       location.reload()
     }
+    if ([400].indexOf(response.status) !== -1) {
+      let messageError = ''
+      if (data.modelState) {
+        for (const [key, value] of Object.entries(data.modelState)) {
+          console.log(key)
+          messageError += '\n' + value[0]
+        }
+      }
+      alert('Có lỗi xảy ra: ' + messageError)
+    }
     const error = (data && data.message) || response.statusText
     return Promise.reject(error)
   }

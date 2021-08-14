@@ -165,6 +165,14 @@ export default createStore({
           alert('Khóa tài khoản thành công')
           commit('banned_staff', payload)
         }).catch(handleResponse)
+    },
+
+    changePassword ({ commit }, payload) {
+      ApiService.put('admin/update/password', payload)
+        .then(handleResponse)
+        .then(() => {
+          alert('Đổi mật khẩu thành công')
+        }).catch(handleResponse)
     }
   },
   modules: {
