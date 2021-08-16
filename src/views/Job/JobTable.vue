@@ -1,21 +1,23 @@
 <template>
   <table>
     <thead>
+          <tr>
+      <th colspan="50">
+        <input v-model="searchText" placeholder="Tìm kiếm theo Id hoặc Tên công việc" @keyup="itemFilter" class="search-input" type="text">
+      </th>
+    </tr>
     <tr>
+      <th>Id</th>
       <th>Tên công việc</th>
       <th>Tên nhà tuyển dụng</th>
       <th>Tên công ty</th>
       <th>Ngày tạo</th>
       <th></th>
     </tr>
-    <tr>
-      <th colspan="50">
-        <input v-model="searchText" @keyup="itemFilter" class="search-input" type="text">
-      </th>
-    </tr>
     </thead>
     <tbody>
     <tr v-for="job in items" :key="job.id">
+      <td>{{ job.id }}</td>
       <td data-label="JobName">
         <a href="javascript:;" @click="showModalInfo(job)">{{ job.name }}</a>
       </td>
@@ -47,7 +49,7 @@
     <p><b>Địa chỉ:</b> {{ Job.workingPlace }}</p>
     <p><b>Mô tả công việc:</b> <span v-html="Job.description"></span></p>
     <p v-if="Job.requirement"><b>Yêu cầu công việc:</b> <span v-html="Job.requirement"></span></p>
-    <p><b>Mức lương:</b> {{ Job.salaryMin }} - {{ Job.salaryMax }}</p>
+    <p><b>Mức lương:</b> {{ salaryMin }} - {{ salaryMax }}</p>
     <p><b>Quyền lợi:</b> <span v-html="Job.offer"></span></p>
     <p><b>Số lượng tuyển:</b> {{ Job.quantity }}</p>
   </modal-box>
@@ -111,14 +113,16 @@ export default {
     const approveModal = ref(false)
     const denyModal = ref(false)
     const searchText = ref('')
+    const salaryMin = ref(0)
+    const salaryMax = ref(0)
 
     const Job = ref({})
 
     const showModalInfo = (job) => {
       jobModalActive.value = true
       Job.value = job
-      Job.value.salaryMin = new Intl.NumberFormat().format(Job.value.salaryMin)
-      Job.value.salaryMax = new Intl.NumberFormat().format(Job.value.salaryMax)
+      salaryMin.value = new Intl.NumberFormat().format(job.salaryMin || 0)
+      salaryMax.value = new Intl.NumberFormat().format(job.salaryMax || 0)
       Job.value.locationLabel = locations.value.find(l => l.value === Job.value.location)?.label
       Job.value.workingFormLabel = workingforms.value.find(l => l.value === Job.value.workingForm)?.label
     }
@@ -150,7 +154,7 @@ export default {
     const itemFilter = () => {
       const cloneData = [...items.value]
       if (searchText.value) {
-        const Items = cloneData.filter(t => t.name.toLowerCase().indexOf(searchText.value.toLowerCase()) > -1 || t.id.toString() === searchText.value) || []
+        const Items = cloneData.filter(t => t.name.toLowerCase().indexOf(searchText.value.toLowerCase()) > -1 || t.id.toString().indexOf(searchText.value) > -1) || []
         store.commit('basic', {
           key: 'jobs',
           value: Items
@@ -175,7 +179,9 @@ export default {
       approveModal,
       denyModal,
       itemFilter,
-      searchText
+      searchText,
+      salaryMin,
+      salaryMax
     }
   }
 }

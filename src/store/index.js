@@ -5,6 +5,7 @@ import { authenticationService } from '../services/authentication.service'
 import { handleResponse } from '../utils/handle-response'
 import { Role } from '../utils/enum'
 import { GetQuarter } from '../utils/helper'
+import FileSaver from 'file-saver'
 
 export default createStore({
   state: {
@@ -243,16 +244,9 @@ export default createStore({
         }).catch(handleResponse)
     },
     downloadReport ({ state }) {
-      ApiService.post('/admin/generate-report', { month: state.monthReport, quarter: state.quarterReport }, { responseType: 'blob' })
+      ApiService.post('/admin/generate-report', { month: state.monthReport, quarter: state.quarterReport }, true, true)
         .then(res => {
-          const url = URL.createObjectURL(new Blob([res.data], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          }))
-          const link = document.createElement('a')
-          link.href = url
-          link.setAttribute('download', 'report_download')
-          document.body.appendChild(link)
-          link.click()
+          FileSaver.saveAs(res.data, 'report_file.xlsx')
         }).catch(handleResponse)
     }
   },

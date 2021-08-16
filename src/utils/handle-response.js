@@ -18,6 +18,8 @@ export function handleResponse (response) {
           console.log(key)
           messageError += '\n' + value[0]
         }
+      } else if (data.message) {
+        messageError = data.message
       }
       alert('Có lỗi xảy ra: ' + messageError)
     }

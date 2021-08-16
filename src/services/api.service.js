@@ -18,11 +18,14 @@ function get (url, hasToken = true) {
   return axios.get(`${config.apiUrl}/${url}`, axiosConfig)
 }
 
-function post (url, data, hasToken = true) {
+function post (url, data, hasToken = true, blobType = null) {
   let axiosConfig = {}
   if (hasToken) {
     const accessToken = authenticationService.userTokenValue.access_token
     axiosConfig = { headers: { Authorization: `Bearer ${accessToken}` } }
+    if (blobType) {
+      axiosConfig.responseType = 'blob'
+    }
   }
   return axios.post(`${config.apiUrl}/${url}`, data, axiosConfig)
 }

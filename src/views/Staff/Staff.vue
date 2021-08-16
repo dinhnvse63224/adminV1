@@ -55,7 +55,6 @@ export default {
     })
 
     const submit = () => {
-      form.confirmPassword = form.password
       store.dispatch('StaffInsert', { ...form })
       form.username = ''
       form.password = ''
