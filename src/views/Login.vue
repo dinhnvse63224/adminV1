@@ -1,6 +1,6 @@
 <template>
   <main-section>
-    <card-component  class="w-11/12 md:w-5/12 shadow-2xl rounded-lg" @submit.prevent="submit" form>
+    <card-component  class="w-11/12 md:w-4/12 shadow-2xl rounded-lg" @submit.prevent="submit" form>
       <field label="Login" help="Please enter your login">
         <control :ref="'userName'" v-model="form.userName" :icon="mdiAccount" name="userName" autocomplete="username"/>
       </field>
@@ -10,7 +10,7 @@
       <span class="error-msg" v-if="errorMessage">{{ errorMessage }}</span>
       <divider />
       <jb-buttons>
-        <jb-button type="submit" color="info" label="Login" />
+        <jb-button :disabled="disabled" type="submit" color="info" label="Login" />
       </jb-buttons>
     </card-component>
   </main-section>
@@ -53,6 +53,8 @@ export default {
       remember: ['remember']
     })
 
+    const isSubmit = ref(false)
+
     const errorMessage = ref('')
 
     const router = useRouter()
@@ -62,6 +64,7 @@ export default {
         if (!form.userName || !form.password) {
           console.log('aaa')
         } else {
+          isSubmit.value = true
           authenticationService.login(form.userName, form.password).then(user => {
             if (user.role === Role.Staff) {
               router.push('/job')
@@ -70,9 +73,11 @@ export default {
             }
             store.commit('user', user)
             store.commit('menuRole', [Menu.filter(m => m.authorize.includes(user.role))])
+            isSubmit.value = false
           }).catch(error => {
             errorMessage.value = error.response.data.error_description
             console.log('err', errorMessage.value)
+            isSubmit.value = false
           })
         }
       } catch (error) {

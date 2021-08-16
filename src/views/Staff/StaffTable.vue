@@ -55,7 +55,7 @@ export default {
     const items = computed(() => store.state.staffs)
 
     const BannedStaff = (staff, isBanned) => {
-      if (confirm('Bạn có muốn khóa tài khoản?')) {
+      if (confirm('Bạn có muốn ' + (!isBanned ? 'mở' : '') + ' khóa tài khoản?')) {
         staff.isBanned = isBanned
         store.dispatch('BannedStaff', { ...staff })
       }

@@ -4,11 +4,11 @@
     <card-component title="Thông tin nhân viên" :icon="mdiSearch" @submit.prevent="submit" form>
       <field>
         <control placeholder="Tài khoản" place :icon="mdiAccount" v-model="form.username" />
-        <control placeholder="Mật khẩu" type="password" :icon="mdiMail" v-model="form.password" />
+        <control placeholder="Mật khẩu" type="password" :icon="mdiLock" v-model="form.password" />
       </field>
      <field>
         <control placeholder="Họ và tên" place :icon="mdiAccount" v-model="form.fullName" />
-        <control placeholder="Số điện thoại" :icon="mdiMonitorCellphone" v-model="form.mobile_phone" />
+        <control placeholder="Nhập lại mật khẩu"  type="password" :icon="mdiLock" v-model="form.confirmPassword" />
       </field>
       <jb-buttons>
         <jb-button type="submit" color="info" label="Submit" />
@@ -23,7 +23,7 @@
 <script>
 import StaffTable from './StaffTable'
 import { reactive } from 'vue'
-import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail, mdiCheck, mdiMonitorCellphone } from '@mdi/js'
+import { mdiBallot, mdiBallotOutline, mdiAccount, mdiMail, mdiCheck, mdiLock } from '@mdi/js'
 import MainSection from '@/components/MainSection'
 import CardComponent from '@/components/CardComponent'
 import HeroBar from '@/components/HeroBar'
@@ -72,7 +72,7 @@ export default {
       mdiAccount,
       mdiMail,
       mdiCheck,
-      mdiMonitorCellphone
+      mdiLock
     }
   }
 }

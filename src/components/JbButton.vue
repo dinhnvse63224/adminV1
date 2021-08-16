@@ -1,5 +1,5 @@
 <template>
-  <component :is="is" :class="componentClass" :href="href" :type="computedType" :to="to" :target="target">
+  <component :disabled="disabled" :is="is" :class="componentClass" :href="href" :type="computedType" :to="to" :target="target">
     <icon v-if="icon" :path="icon" />
     <span v-if="label" :class="labelClass">{{ label }}</span>
   </component>
@@ -20,6 +20,7 @@ export default {
     label: [String, Number],
     icon: String,
     href: String,
+    disabled: Boolean,
     target: String,
     to: [String, Object],
     type: String,

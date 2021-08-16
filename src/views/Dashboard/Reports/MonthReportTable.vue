@@ -1,31 +1,46 @@
 <template>
   <table>
     <tbody>
-    <tr>
-      <td>Số nhà tuyển dụng tham gia vào hệ thống: 0</td>
+          <tr>
+      <td>
+        <field>
+          <control :options="months" @change.prevent="onChange" v-model="monthReport" />
+        </field>
+      </td>
     </tr>
     <tr>
-      <td>Số việc làm được đăng lên: 0</td>
+      <td>Số nhà tuyển dụng tham gia vào hệ thống</td>
+      <td>{{ monthReportData.numberOfRecruiters }}</td>
     </tr>
     <tr>
-     <td>Số lượng sinh viên nhà tuyển dụng có nhu cầu tuyển dụng: 0</td>
+      <td>Số việc làm được đăng lên</td>
+      <td>{{ monthReportData.numberOfJobs }}</td>
     </tr>
     <tr>
-       <td>Số lượng sinh viên tham gia tìm việc: 0</td>
+     <td>Số lượng sinh viên nhà tuyển dụng có nhu cầu tuyển dụng</td>
+     <td>{{ monthReportData.numberOfDesiredStudents }}</td>
+    </tr>
+    <tr>
+       <td>Số lượng sinh viên tham gia tìm việc</td>
+       <td>{{ monthReportData.numberOfStudents }}</td>
     </tr>
     </tbody>
   </table>
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { mdiEye, mdiDownload, mdiAccount, mdiLockOpenVariant } from '@mdi/js'
 import { useStore } from 'vuex'
 import JbButton from '@/components/JbButton'
+import Field from '@/components/Field'
+import Control from '@/components/Control'
 
 export default {
   name: 'MonthReportTable',
   components: {
+    Field,
+    Control
   },
   props: {
     checkable: Boolean
@@ -35,7 +50,20 @@ export default {
 
     store.dispatch('fetchStaff')
 
+    const months = ref(Array.from(Array(12).keys()).map(t => t + 1))
+
     const items = computed(() => store.state.staffs)
+
+    const monthReport = computed(() => store.state.monthReport)
+
+    store.dispatch('getMonthReport', monthReport.value)
+
+    const monthReportData = computed(() => store.state.monthReportData)
+
+    const onChange = (event) => {
+      store.commit('setMonthReport', event.target.value)
+      store.dispatch('getMonthReport', event.target.value)
+    }
 
     return {
       mdiEye,
@@ -43,7 +71,11 @@ export default {
       mdiAccount,
       mdiLockOpenVariant,
       items,
-      JbButton
+      JbButton,
+      monthReport,
+      months,
+      onChange,
+      monthReportData
     }
   }
 }

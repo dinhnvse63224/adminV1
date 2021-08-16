@@ -4,6 +4,7 @@ import { ApiService } from '../services/api.service'
 import { authenticationService } from '../services/authentication.service'
 import { handleResponse } from '../utils/handle-response'
 import { Role } from '../utils/enum'
+import { GetQuarter } from '../utils/helper'
 
 export default createStore({
   state: {
@@ -25,7 +26,14 @@ export default createStore({
     locations: [],
 
     staffs: [],
-    jobs: []
+    jobs: [],
+
+    monthReport: new Date().getMonth() + 1,
+    monthReportData: {},
+    quarterReport: GetQuarter(new Date().getMonth() + 1),
+    quarterReportData: {},
+    yearReportData: {},
+    dashboardReportData: {}
   },
   mutations: {
     /* A fit-them-all commit */
@@ -68,6 +76,13 @@ export default createStore({
       if (index > -1) {
         state.staffs[index].isBanned = payload.isBanned
       }
+    },
+
+    setMonthReport (state, payload) {
+      state.monthReport = payload
+    },
+    setQuarterReport (state, payload) {
+      state.quarterReport = payload
     }
   },
   actions: {
@@ -183,6 +198,61 @@ export default createStore({
         .then(handleResponse)
         .then(() => {
           alert('Đổi mật khẩu thành công')
+        }).catch(handleResponse)
+    },
+
+    getMonthReport ({ commit }, payload) {
+      ApiService.get('/admin/report/by-month?month=' + payload)
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'monthReportData',
+            value: res.data
+          })
+        }).catch(handleResponse)
+    },
+
+    getQuarterReport ({ commit }, payload) {
+      ApiService.get('/admin/report/by-quarter?quarter=' + payload)
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'quarterReportData',
+            value: res.data
+          })
+        }).catch(handleResponse)
+    },
+    getYearReport ({ commit }) {
+      ApiService.get('/admin/report/by-year')
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'yearReportData',
+            value: res.data || {}
+          })
+        }).catch(handleResponse)
+    },
+    getDashboardReport ({ commit }) {
+      ApiService.get('/admin/dashboard-data')
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'dashboardReportData',
+            value: res.data || {}
+          })
+        }).catch(handleResponse)
+    },
+    downloadReport ({ state }) {
+      ApiService.post('/admin/generate-report', { month: state.monthReport, quarter: state.quarterReport }, { responseType: 'blob' })
+        .then(res => {
+          const url = URL.createObjectURL(new Blob([res.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          }))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'report_download')
+          document.body.appendChild(link)
+          link.click()
         }).catch(handleResponse)
     }
   },
