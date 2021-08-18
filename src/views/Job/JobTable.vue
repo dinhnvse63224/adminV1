@@ -21,8 +21,8 @@
       <td data-label="JobName">
         <a href="javascript:;" @click="showModalInfo(job)">{{ job.name }}</a>
       </td>
-      <td data-label="EmployeeName">{{ job.employee_name }}</td>
-      <td data-label="Company">{{ job.company }}</td>
+      <td data-label="EmployeeName">{{ job.recruiterUsername }}</td>
+      <td data-label="Company">{{ job.companyName }}</td>
       <td data-label="CreateDate">{{ job.createDate }}</td>
       <td class="actions-cell">
         <jb-buttons type="justify-start lg:justify-end" no-wrap>
