@@ -28,6 +28,10 @@ export default createStore({
 
     staffs: [],
     jobs: [],
+    recruiters: [],
+    TotalRecruiters: 0,
+    students: [],
+    TotalStudents: 0,
 
     monthReport: new Date().getMonth() + 1,
     monthReportData: {},
@@ -247,6 +251,53 @@ export default createStore({
       ApiService.post('/admin/generate-report', { month: state.monthReport, quarter: state.quarterReport }, true, true)
         .then(res => {
           FileSaver.saveAs(res.data, 'report_file.xlsx')
+        }).catch(handleResponse)
+    },
+    fetchRecruiter ({ commit }, payload) {
+      ApiService.get('admin/recruiters?page=' + payload)
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'recruiters',
+            value: res.data || []
+          })
+        }).catch(handleResponse)
+    },
+    fetchStudent ({ commit }, payload) {
+      ApiService.get('admin/students?page=' + payload)
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'students',
+            value: res.data || []
+          })
+        }).catch(handleResponse)
+    },
+    getTotalRecruiter ({ commit }) {
+      ApiService.get('admin/total-pages?choice=recruiter')
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'TotalRecruiters',
+            value: res.data || 0
+          })
+        }).catch(handleResponse)
+    },
+    getTotalStudent ({ commit }) {
+      ApiService.get('admin/total-pages?choice=student')
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'TotalStudents',
+            value: res.data || 0
+          })
+        }).catch(handleResponse)
+    },
+    updateBanner ({ commit }, payload) {
+      ApiService.upload('staff/update/banner', true, payload)
+        .then(handleResponse)
+        .then(res => {
+          alert('Cập nhật banner thành công !')
         }).catch(handleResponse)
     }
   },

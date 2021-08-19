@@ -27,11 +27,29 @@ const routes = [
   {
     meta: {
       title: 'Quản lý nhân viên',
-      authorize: [Role.Admin, Role.Staff]
+      authorize: [Role.Admin]
     },
     path: '/staff',
     name: 'staff',
     component: () => import(/* webpackChunkName: "employees" */ '../views/Staff/Staff')
+  },
+  {
+    meta: {
+      title: 'Nhà tuyển dụng',
+      authorize: [Role.Admin]
+    },
+    path: '/recruiter',
+    name: 'recruiter',
+    component: () => import(/* webpackChunkName: "recruiter" */ '../views/Recruiter/RecruiterTable.vue')
+  },
+  {
+    meta: {
+      title: 'Sinh viên',
+      authorize: [Role.Admin]
+    },
+    path: '/student',
+    name: 'student',
+    component: () => import(/* webpackChunkName: "student" */ '../views/Student/StudentTable.vue')
   },
   {
     meta: {

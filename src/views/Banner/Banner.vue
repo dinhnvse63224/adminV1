@@ -4,7 +4,7 @@
     <card-component title="Cập nhật banner" :icon="mdiSearch" @submit.prevent="submit" form>
       <field>
         <control placeholder="URL" place :icon="mdiAccount" v-model="form.url" />
-        <control type="file" :icon="mdiMail" v-model="form.image" />
+        <control type="file" id="bannerFile" :icon="mdiMail" v-model="form.image" />
       </field>
      <field>
         <control :options="options" :icon="mdiAccount" v-model="form.type" />
@@ -26,6 +26,7 @@ import Field from '@/components/Field'
 import Control from '@/components/Control'
 import JbButton from '@/components/JbButton'
 import JbButtons from '@/components/JbButtons'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Banner',
@@ -39,11 +40,12 @@ export default {
     JbButtons
   },
   setup () {
+    const store = useStore()
     const options = [
-      { label: 'Trang chủ bên trái', value: 'HOME_LEFT' },
-      { label: 'Trang chủ bên phải', value: 'HOME_RIGHT' },
-      { label: 'Trang làm việc bên trái', value: 'DASHBOARD_LEFT' },
-      { label: 'Trang làm việc bên phải', value: 'DASHBOARD_RIGHT' }
+      { label: 'Trang chủ bên trái', value: 1 },
+      { label: 'Trang chủ bên phải', value: 2 },
+      { label: 'Trang làm việc bên trái', value: 3 },
+      { label: 'Trang làm việc bên phải', value: 4 }
     ]
     const form = reactive({
       url: '',
@@ -52,7 +54,16 @@ export default {
     })
 
     const submit = () => {
-      console.log(JSON.stringify(form))
+      if (!form.image) {
+        alert('Vui lòng chọn banner')
+        return
+      }
+      const formData = new FormData()
+      const fileEl = document.querySelector('#bannerFile')
+      formData.append('image', fileEl.files[0])
+      formData.append('id', form.type.value)
+      formData.append('url', form.url)
+      store.dispatch('updateBanner', formData)
     }
 
     return {

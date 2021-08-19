@@ -6,7 +6,8 @@ export const ApiService = {
   get,
   post,
   put,
-  remove
+  remove,
+  upload
 }
 
 function get (url, hasToken = true) {
@@ -46,4 +47,13 @@ function remove (url, hasToken = true) {
     axiosConfig = { headers: { Authorization: `Bearer ${accessToken}` } }
   }
   return axios.delete(`${config.apiUrl}/${url}`, axiosConfig)
+}
+
+function upload (url, hasToken = true, formData = null) {
+  let axiosConfig = {}
+  if (hasToken) {
+    const accessToken = authenticationService.userTokenValue.access_token
+    axiosConfig = { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'multipart/form-data' } }
+  }
+  return axios.put(`${config.apiUrl}/${url}`, formData, axiosConfig)
 }

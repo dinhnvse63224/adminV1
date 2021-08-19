@@ -20,6 +20,18 @@ export const Menu = [
     authorize: [Role.Admin]
   },
   {
+    to: '/recruiter',
+    label: 'Nhà tuyển dụng',
+    icon: mdiAccount,
+    authorize: [Role.Admin]
+  },
+  {
+    to: '/student',
+    label: 'Sinh viên',
+    icon: mdiAccount,
+    authorize: [Role.Admin]
+  },
+  {
     to: '/job',
     label: 'Duyệt công việc',
     icon: mdiAlphaJBox,
