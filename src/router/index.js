@@ -68,6 +68,15 @@ const routes = [
     path: '/banner',
     name: 'banner',
     component: () => import(/* webpackChunkName: "banner" */ '../views/Banner/Banner')
+  },
+  {
+    meta: {
+      title: 'Ngành nghề',
+      authorize: [Role.Admin, Role.Staff]
+    },
+    path: '/catagory',
+    name: 'catagory',
+    component: () => import(/* webpackChunkName: "banner" */ '../views/ManageJob/catagory')
   }
 ]
 

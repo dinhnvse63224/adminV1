@@ -27,6 +27,8 @@ export default createStore({
     locations: [],
 
     staffs: [],
+    catagory: [],
+    activedaysandprice: [],
     jobs: [],
     recruiters: [],
     TotalRecruiters: 0,
@@ -75,7 +77,12 @@ export default createStore({
     staff_insert (state, payload) {
       state.staffs.push(payload)
     },
-
+    catagory_insert (state, payload) {
+      state.caragory.push(payload)
+    },
+    activeDays_insert (state, payload) {
+      state.activedaysandprice.post(payload)
+    },
     banned_staff (state, payload) {
       const index = state.staffs.findIndex(t => t.id === payload.id)
       if (index > -1) {
@@ -177,6 +184,18 @@ export default createStore({
       ApiService.post('admin/create', payload)
         .then(() => {
           commit('staff_insert', payload)
+        }).catch(handleResponse)
+    },
+    CatogoryInsert ({ commit }, payload) {
+      ApiService.post('admin/categories/create', payload)
+        .then(() => {
+          commit('catagory_insert', payload)
+        }).catch(handleResponse)
+    },
+    ActiveDaysInsert ({ commit }, payload) {
+      ApiService.post('admin/active-days-price/create', payload)
+        .then(() => {
+          commit('activeDays_insert', payload)
         }).catch(handleResponse)
     },
 

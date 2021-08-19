@@ -42,5 +42,11 @@ export const Menu = [
     label: 'Banner',
     icon: mdiImageAlbum,
     authorize: [Role.Staff]
+  },
+  {
+    to: '/catagory',
+    label: 'Ngành nghề',
+    icon: mdiImageAlbum,
+    authorize: [Role.Admin]
   }
 ]

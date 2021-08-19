@@ -12,6 +12,7 @@
       <th>Tên nhà tuyển dụng</th>
       <th>Tên công ty</th>
       <th>Ngày tạo</th>
+      <th>Số ngày có hiệu lực</th>
       <th></th>
     </tr>
     </thead>
@@ -24,6 +25,7 @@
       <td data-label="EmployeeName">{{ job.recruiterUsername }}</td>
       <td data-label="Company">{{ job.companyName }}</td>
       <td data-label="CreateDate">{{ job.createDate }}</td>
+      <td data-label="activeDay">{{ job.activeDays }}</td>
       <td class="actions-cell">
         <jb-buttons type="justify-start lg:justify-end" no-wrap>
           <jb-button @click.prevent="approveModalShow(job)" title="Duyệt công việc" color="success" :icon="mdiClipboardCheckOutline" small />
@@ -74,6 +76,7 @@
     v-on:confirm="denyJobAction"
   >
    <p>Xác nhận từ chối công việc: {{ Job.name }}</p>
+  <control placeholder="Nhập lý do từ chối" />
   </modal-box>
 </template>
 
@@ -85,6 +88,7 @@ import JbButtons from '@/components/JbButtons'
 import JbButton from '@/components/JbButton'
 import { useStore } from 'vuex'
 import ModalBox from '@/components/ModalBox'
+import Control from '../../components/Control.vue'
 
 export default {
   name: 'JobTable',
@@ -92,7 +96,8 @@ export default {
     Level,
     ModalBox,
     JbButtons,
-    JbButton
+    JbButton,
+    Control
   },
   props: {
     checkable: Boolean
