@@ -3,11 +3,14 @@
   <main-section>
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-6">
     <card-component title="Cập nhật Ngành nghề" :icon="mdiSearch" @submit.prevent="submit" form>
-      <field>
+      <field v-if="!updateCategory">
         <control placeholder="Ngành nghề muốn thêm" place :icon="mdiClipboardList" v-model="catagory.value" />
       </field>
+      <field v-if="updateCategory">
+        <control placeholder="Ngành nghề muốn thêm" place :icon="mdiClipboardList" v-model="updateCategory.value" />
+      </field>
       <jb-buttons>
-        <jb-button type="submit" color="info" label="Thêm" />
+        <jb-button type="submit" color="info" :label="!updateCategory ? 'Thêm' : 'Cập nhật'" />
       </jb-buttons>
       <br/>
      <card-component :icon="mdiAccount" title="Ngành nghề" has-table>
@@ -32,7 +35,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { mdiBallot, mdiBallotOutline, mdiAccount, mdiCurrencyUsd, mdiCheck, mdiMonitorCellphone, mdiCalendarBlank, mdiClipboardList } from '@mdi/js'
 import MainSection from '@/components/MainSection'
 import CardComponent from '@/components/CardComponent'
@@ -60,6 +63,7 @@ export default {
   },
   setup () {
     const store = useStore()
+    const updateCategory = computed(() => store.state.updateCategory)
     const catagory = reactive({
       value: ''
     })
@@ -68,9 +72,13 @@ export default {
       price: ''
     })
     const submit = () => {
-      store.dispatch('CatogoryInsert', { ...catagory })
-      catagory.value = ''
-      console.log(catagory)
+      if (updateCategory.value != null) {
+        store.dispatch('CatogoryUpdate', { ...updateCategory.value })
+        catagory.value = ''
+      } else {
+        store.dispatch('CatogoryInsert', { ...catagory })
+        catagory.value = ''
+      }
     }
     const submitdays = () => {
       store.dispatch('ActiveDaysInsert', { ...days })
@@ -91,7 +99,8 @@ export default {
       CatagoryTable,
       PriceTable,
       mdiCalendarBlank,
-      mdiClipboardList
+      mdiClipboardList,
+      updateCategory
     }
   }
 }

@@ -28,6 +28,7 @@ export default createStore({
 
     staffs: [],
     catagory: [],
+    updateCategory: null,
     activedaysandprice: [],
     jobs: [],
     recruiters: [],
@@ -78,10 +79,22 @@ export default createStore({
       state.staffs.push(payload)
     },
     catagory_insert (state, payload) {
-      state.caragory.push(payload)
+      state.catagory.push(payload)
+    },
+    catagory_update (state, payload) {
+      const index = state.catagory.findIndex(t => t.id === payload.id)
+      if (index > -1) {
+        state.catagory[index].value = payload.value
+      }
     },
     activeDays_insert (state, payload) {
-      state.activedaysandprice.post(payload)
+      state.activedaysandprice.push(payload)
+    },
+    ActiveDayPriceDelete (state, payload) {
+      const index = state.activedaysandprice.findIndex(t => t.id === payload.id)
+      if (index > -1) {
+        state.activedaysandprice.splice(index, 1)
+      }
     },
     banned_staff (state, payload) {
       const index = state.staffs.findIndex(t => t.id === payload.id)
@@ -95,6 +108,9 @@ export default createStore({
     },
     setQuarterReport (state, payload) {
       state.quarterReport = payload
+    },
+    setUpdateCategory (state, payload) {
+      state.updateCategory = payload
     }
   },
   actions: {
@@ -190,6 +206,14 @@ export default createStore({
       ApiService.post('admin/categories/create', payload)
         .then(() => {
           commit('catagory_insert', payload)
+        }).catch(handleResponse)
+    },
+    CatogoryUpdate ({ commit }, payload) {
+      ApiService.put('admin/categories/update', payload)
+        .then(() => {
+          alert('Cập nhật thành công')
+          commit('catagory_update', payload)
+          commit('setUpdateCategory', null)
         }).catch(handleResponse)
     },
     ActiveDaysInsert ({ commit }, payload) {
@@ -317,6 +341,34 @@ export default createStore({
         .then(handleResponse)
         .then(res => {
           alert('Cập nhật banner thành công !')
+        }).catch(handleResponse)
+    },
+    fetchCategory ({ commit }) {
+      ApiService.get('admin/categories')
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'catagory',
+            value: res.data || []
+          })
+        }).catch(handleResponse)
+    },
+    fetchActiveDayPrice ({ commit }) {
+      ApiService.get('admin/active-days-price')
+        .then(handleResponse)
+        .then(res => {
+          commit('basic', {
+            key: 'activedaysandprice',
+            value: res.data || []
+          })
+        }).catch(handleResponse)
+    },
+    ActiveDayPriceDelete ({ commit }, payload) {
+      ApiService.remove(`admin/active-days-price/${payload.id}/delete`)
+        .then(handleResponse)
+        .then(res => {
+          commit('ActiveDayPriceDelete', payload)
+          alert('Xoá thành công')
         }).catch(handleResponse)
     }
   },

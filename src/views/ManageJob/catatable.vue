@@ -3,13 +3,11 @@
     <thead>
     <tr>
       <th>Ngành Nghề</th>
-      <th>Ngày tạo</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td data-label="Name">Abc</td>
-      <td data-label="Phone">cav</td>
+    <tr style="cursor: pointer;" @click="edit(category)" v-for="category in items" :key="category.id">
+      <td data-label="Value">{{ category.value }}</td>
       <td class="actions-cell">
         <jb-buttons type="justify-start lg:justify-end" no-wrap>
           <jb-button  title="Xóa" color="danger" :icon="mdiCancel"  />
@@ -18,19 +16,15 @@
     </tr>
     </tbody>
   </table>
-  <!-- <div class="table-pagination">
-    <level>
-      <b>Số bản ghi: {{ items.length || 0 }}</b>
-    </level>
-  </div> -->
 </template>
 <script>
-// import { computed } from 'vue'
+
+import { computed } from 'vue'
 import { mdiEye, mdiCancel, mdiAccount, mdiLockOpenVariant } from '@mdi/js'
+import { useStore } from 'vuex'
 // import Level from '@/components/Level'
 // import JbButtons from '@/components/JbButtons'
 // import JbButton from '@/components/JbButton'
-// import { useStore } from 'vuex'
 
 export default {
   name: 'CatagoryTable',
@@ -43,11 +37,21 @@ export default {
     checkable: Boolean
   },
   setup () {
+    const store = useStore()
+    store.dispatch('fetchCategory')
+    const items = computed(() => store.state.catagory)
+
+    const edit = (category) => {
+      store.commit('setUpdateCategory', category)
+    }
+
     return {
       mdiEye,
       mdiCancel,
       mdiAccount,
-      mdiLockOpenVariant
+      mdiLockOpenVariant,
+      items,
+      edit
     }
   }
 }
